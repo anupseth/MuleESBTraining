@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="da84fd01-07ed-489d-83ce-dacaf445ce56" basePath="emp-sapi" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="emp-sapiFlow" doc:id="b583a42a-4c78-4831-94d2-2510c8fa2915" >
+		<http:listener doc:name="Listener" doc:id="7693d538-873e-4453-9a4f-ac92e123369b" config-ref="HTTP_Listener_config" path="hello" allowedMethods="GET">
+			<http:response >
+				<http:body ><![CDATA[Your response]]></http:body>
+			</http:response>
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="84ba8dac-c1cb-431b-95d4-dd1d312eab38" message="Welcome to Mule ESB"/>
+	</flow>
+</mule>
