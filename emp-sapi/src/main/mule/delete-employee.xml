@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="delete-employeeFlow" doc:id="36f69833-2f34-418f-8901-237010890ef2" >
+		<http:listener doc:name="Listener" doc:id="9c44ca3b-c4a3-4f3f-afe6-dc4f46d5e6d1" config-ref="EMP_SAPI_HTTP_Listner_config" path="delete-employee/{id}" allowedMethods="DELETE"/>
+		<logger level="INFO" doc:name="Entry Logger" doc:id="d9a93232-1493-4a9e-bdf0-d5f374180d6a" message="Delete flow starts : Id to be delteted : #[attributes.uriParams.id]"/>
+		<db:delete doc:name="Delete Employee" doc:id="6c1d878e-94ad-4a2a-8070-162615d55dd4" config-ref="EMP_SAPI_Mysql_Database_Config">
+			<db:sql ><![CDATA[delete from emp where emp_id = :emp_id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"emp_id" : attributes.uriParams.id
+}]]]></db:input-parameters>
+		</db:delete>
+		<logger level="INFO" doc:name="Middle Logger" doc:id="0e935e72-f0c4-47d7-a944-59d365043d27" message="Middle logger : #[payload]"/>
+		<ee:transform doc:name="Prepare response" doc:id="6f7d16a7-96b9-4e47-b23b-e8f7e5117a77" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"status" : 200,
+	"message" : "Success"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

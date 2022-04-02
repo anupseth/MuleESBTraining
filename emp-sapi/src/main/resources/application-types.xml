@@ -50,4 +50,13 @@ type EmpListResponse = Array<{|  empid: Number {"typeId": "int"},   empname: Str
       </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#6f7d16a7-96b9-4e47-b23b-e8f7e5117a77">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="output"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
 </types:mule>
