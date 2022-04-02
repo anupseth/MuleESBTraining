@@ -4,12 +4,48 @@
     <types:type name="output" format="xml">
       <types:example format="xml" element="response" location="examples/response.xml"/>
     </types:type>
+    <types:type name="empresponse" format="json">
+      <types:shape format="weave" example="examples/Response.json"><![CDATA[%dw 2.0
+
+type empresponse = {|
+  empid: Number {"typeId": "int"}, 
+  empname: String, 
+  status: String
+|} {"example": "{\\\"empid\\\":100,\\\"empname\\\":\\\"FSD\\\",\\\"status\\\":\\\"Active\\\"}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="EmpListResponse" format="json">
+      <types:shape format="weave" example="examples/EmpListResponse.json"><![CDATA[%dw 2.0
+
+type EmpListResponse = Array<{|  empid: Number {"typeId": "int"},   empname: String,   status: String|}> {"example": "[{\\\"empid\\\":100,\\\"empname\\\":\\\"FSD\\\",\\\"status\\\":\\\"Active\\\"},{\\\"empid\\\":100,\\\"empname\\\":\\\"FSD\\\",\\\"status\\\":\\\"Active\\\"},{\\\"empid\\\":100,\\\"empname\\\":\\\"FSD\\\",\\\"status\\\":\\\"Active\\\"}]"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#57a80914-a236-4ba0-9d6d-9414d46d7b9c">
     <types:processor-declaration>
       <types:output-event>
         <types:message>
           <types:payload type="output"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#ccb27736-64a8-4fcf-87b9-ebc0ec6139c1">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="empresponse"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#2acd04e2-66a3-4908-a3ad-da8a69e3306f">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="EmpListResponse"/>
         </types:message>
       </types:output-event>
     </types:processor-declaration>

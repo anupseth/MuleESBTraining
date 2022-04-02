@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="fetch-employee-by-idFlow" doc:id="86a06bcd-31ab-4d79-a303-d09673c4245a" >
+		<http:listener doc:name="Fetch Employee By Id Listner" doc:id="447c61d7-fade-4d06-9930-49585a09dba5" config-ref="EMP_SAPI_HTTP_Listner_config" path="fetch-employee"/>
+		<logger level="INFO" doc:name="Entry Logger" doc:id="d906a790-a127-4431-a8e8-8a8ca3d5cf99" message="Fetch Employee by id flow started : #[attributes.queryParams.empid]"/>
+		<db:select doc:name="Fetch Emp by Id" doc:id="50882dbf-b10c-462d-9b06-bd029393f7f4" config-ref="EMP_SAPI_Mysql_Database_Config">
+			<db:sql ><![CDATA[select * from emp where emp_id = :emp_id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"emp_id" : attributes.queryParams.empid
+}]]]></db:input-parameters>
+		</db:select>
+		<logger level="INFO" doc:name="Middle Logger" doc:id="65d03fcc-fe91-4c6f-a91f-326d30593392" message="Data from DB : #[payload]"/>
+		<ee:transform doc:name="Prepare Response" doc:id="ccb27736-64a8-4fcf-87b9-ebc0ec6139c1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	empid: payload[0].emp_id,
+	empname: payload[0].emp_name default "",
+	status: payload[0].emp_status default ""
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
